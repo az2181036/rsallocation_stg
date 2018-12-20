@@ -1,6 +1,6 @@
 import math
 import queue
-
+import constants
 
 num = 100000
 rate = [ 82, 10, 57, 14]
@@ -10,8 +10,10 @@ process = [82 for i in range(500)] + [57 for i in range(500)] + [14 for i in ran
 
 n = 12
 m = 2000
+Qos = 0
 
-def Best_REPLY(pro, p, _lambda):
+
+def best_reply(pro, p, _lambda):
     pro.sort(reverse=True)
     k = m - 1
 
@@ -32,21 +34,46 @@ def Best_REPLY(pro, p, _lambda):
         else:
             p[j] = 0
 
-# def LeaderBestResponse(pro, miu):
-#     gamma = _gamma
-#     M = [[[0,0,0,0] for i in range(m)] for i in range(gamma)]
-#     s = [[0 for i in range(m)] for i in range(gamma)]
-#
-#     power = sum(pro)
-#
-#     for i in range(m):
-#         k = int(pro[i]/gamma)
-#         while k<=power:
-#             if s[]
+def leader_best_response(p, pro):
+    gamma = _gamma
+    M = [[[0,0,0,0] for i in range(m)] for i in range(gamma)]
+    s = [[0 for i in range(m)] for i in range(gamma)]
+
+    power = sum(p)
+
+    for i in range(m):
+        _min_val = math.ceil(p[i]/gamma)
+        k = _min_val
+        while k <= power:
+            if s[k][i-1] < s[k-_min_val] + pro[i]:
+                s[k][i] = s[k-_min_val][i-1] + pro[i]
+                M[k][i] = M[k-_min_val][i-1] +
+            else:
+                s[k][i] = s[k][i-1]
+                M[k][i] = M[k][i-1]
+            k += 1
+    return M,s
 
 
+def stackel_berg_game(pro, miu):
+    M,s =
+    total_lambda_avg = sum(_lambda) / len(_lambda)
+    power = sum(pro)
+    k = power / _gamma
+    num = sum(M[k][m])
+    available_pro = pro.copy()
 
-eps = 1e-3
+    while(s[k][m]) <= total_lambda_avg + num/Qos:
+        k += 1
+        num = sum(M[k][m])
+
+    while(True):
+
+
+def main():
+    M,s = leader_best_response(p, process)
+
+
 tag = 'Con'
 norm = 1
 t = [[0] for i in range(n)]
