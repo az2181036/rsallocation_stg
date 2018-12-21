@@ -4,53 +4,59 @@ import constants
 
 _lambda = [50,60,70,80,80,100,110,120,130,140,150,160]
 
-def get_total_power(server_list):
+def get_total_available_process(server_list, sqrt_flag):
     sum = 0
-    for i in server_list:
-        sum += i.get_power()
+    if sqrt_flag:
+        for i in server_list:
+            sum += math.sqrt(i.get_available_process())
+    else:
+        for i in server_list:
+            sum += i.get_available_process()
     return sum
 
-def best_reply(server_list, _lambda):
+def get_total_power(server_list):
+    sum = 0
+    for i in range(len(server_list)):
+        sum += server_list[i].get_power()
+
+def best_reply(server_list, lambda_j):
     server_list.sort(reverse=True)
     k = constants.m - 1
 
-    while True:
-        tmp = get_total_power(server_list)
-        _tmp = 0
-        for i in range(k):
-            _tmp += math.sqrt(server_list[k-i-1])
-        t = (tmp - _lambda) / _tmp
-        if t >= math.sqrt(pro[k]):
-            k = k - 1
-        else:
-            break
+    tmp = get_total_available_process(server_list, False)
+    _tmp = get_total_available_process(server_list, True)
+    t = (tmp - lambda_j) / _tmp
 
-    for j in range(constants.m):
-        if j <= k:
-            p[j] = (pro[j] - t * math.sqrt(pro[j])) / _lambda
-        else:
-            p[j] = 0
+    while t>= math.sqrt(server_list[k].get_available_process()):
+        constants.p[k] = 0
+        k = k - 1
+        tmp = get_total_available_process(server_list, False)
+        _tmp = get_total_available_process(server_list, True)
+        t = (tmp - lambda_j) / _tmp
 
-def leader_best_response(p, pro):
+    for j in range(k+1):
+        constants.p[j] = (server_list[j].get_available_process() - t * math.sqrt(server_list[j].get_available_process()))/ lambda_j
+
+
+def leader_best_response(server_list):
     gamma = constants._gamma
     M = [[[0,0,0,0] for i in range(constants.m)] for i in range(gamma)]
     s = [[0 for i in range(constants.m)] for i in range(gamma)]
 
-    power = sum(p)
+    power = get_total_power(server_list)
 
     for i in range(constants.m):
-        _min_val = math.ceil(p[i]/gamma)
+        _min_val = math.ceil(server_list[i].get_power()/gamma)
         k = _min_val
         while k <= power:
-            if s[k][i-1] < s[k-_min_val] + pro[i]:
-                s[k][i] = s[k-_min_val][i-1] + pro[i]
-                M[k][i] = M[k-_min_val][i-1] + 0
+            if s[k][i-1] < s[k - _min_val] + server_list[i].process:
+                s[k][i] = s[k-_min_val][i-1] + server_list[i].process
+                M[k][i] = M[k-_min_val][i-1] + server_list[i].add_this_type_server()
             else:
                 s[k][i] = s[k][i-1]
                 M[k][i] = M[k][i-1]
             k += 1
     return M,s
-
 
 def stackel_berg_game(pro, p, M, s):
     total_lambda_avg = sum(_lambda) / len(_lambda)

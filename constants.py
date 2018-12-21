@@ -1,4 +1,4 @@
-from server import server
+from server import *
 
 eps = 1e-3
 
@@ -18,4 +18,5 @@ server_list = [server(0,49.6,272,82) for i in range(500)] + [server(1,15.9,45.1,
 _lambda = []  # 到达速率 for n agents
 _gamma = 0 # 分级的数目
 
+p = [[0 for i in range(m)] for i in range(n)] # 概率矩阵
 

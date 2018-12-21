@@ -1,6 +1,7 @@
 import stg
 import server
 import constants
+import random
 
 def main():
     M,s = stg.best_reply(constants.server_list,constants._lambda)

@@ -22,8 +22,11 @@ class server(object):
         N[self.type] = 1
         return N
 
-    def set_utilaztion(self, miu):
-        self.utilazation = miu / self.process
+    def update_utilaztion(self, miu):
+        self.utilazation = self.utilazation + miu / self.process
 
     def get_power(self):
         return self.idle_power + self.utilazation * (self.busy_power - self.idle_power)
+
+    def get_available_process(self):
+        return (1 - self.utilazation) * self.process
