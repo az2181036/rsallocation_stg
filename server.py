@@ -1,12 +1,14 @@
 import constants
 
 class server(object):
-    def __init__(self, type, idle_power, busy_power, process, util = 0):
+    def __init__(self, type, idle_power, busy_power, process, state=False,util=0):
         self.type = type
         self.idle_power = idle_power
         self.busy_power = busy_power
         self.process = process
+        self.state = state
         self.utilazation = util
+        self.wait_task_num = 0
 
     def __lt__(self, other):
         return self.process < other.process
@@ -30,3 +32,9 @@ class server(object):
 
     def get_available_process(self):
         return (1 - self.utilazation) * self.process
+
+    def add_wait_task_num(self):
+        self.wait_task_num += 1
+
+    def del_wait_task_num(self):
+        self.wait_task_num -= 1

@@ -20,3 +20,8 @@ _gamma = 0 # 分级的数目
 
 p = [[0 for i in range(m)] for i in range(n)] # 概率矩阵
 
+mm1_start_limit = 10000
+mm1_end_limit = 100000
+mm1_interval = int((mm1_end_limit - mm1_start_limit) / 100)
+
+
