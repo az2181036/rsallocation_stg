@@ -15,10 +15,8 @@ Qos = 0 # avg response time
 server_list = [server(0,49.6,272,82) for i in range(500)] + [server(1,15.9,45.1,10) for i in range(500)] + \
           [server(2,122,580,57) for i in range(500)] + [server(3,63.2,236,14) for i in range(500)]
 
-_lambda = []  # 到达速率 for n agents
+_lambda = [[1],[2]]  # 到达速率 for n agents
 _gamma = 0 # 分级的数目
-
-p = [[0 for i in range(m)] for i in range(n)] # 概率矩阵
 
 mm1_start_limit = 10000
 mm1_end_limit = 100000

@@ -28,10 +28,10 @@ class server(object):
         self.utilazation = self.utilazation + miu / self.process
 
     def get_power(self):
-        return self.idle_power + self.utilazation * (self.busy_power - self.idle_power)
+        return (self.idle_power + self.utilazation * (self.busy_power - self.idle_power)) * self.state
 
     def get_available_process(self):
-        return (1 - self.utilazation) * self.process
+        return (1 - self.utilazation) * self.process * self.state
 
     def add_wait_task_num(self):
         self.wait_task_num += 1

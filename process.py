@@ -1,8 +1,7 @@
 import stg
 import constants
-import multiprocessing
 
-def get_available_process(server_list, id):
+def get_available_process(server_list, p, id):
     tmp = server_list.copy()
     for j in range(constants.m):
         if tmp[j].state is False:
@@ -10,23 +9,24 @@ def get_available_process(server_list, id):
         for i in range(constants.n):
             if i == id:
                 continue
-            tmp[j].process -= constants.p[i][j] * constants._lambda[i]
+            tmp[j].process -= p[i][j] * constants._lambda[i]
     return tmp
 
-class AgentProcess(multiprocessing.Process):
-    def __init__(self, id):
-        super(AgentProcess, self).__init__()
-        self.id = id
 
-    def run(self):
-        while(True):
-            s = get_available_process(constants.server_list, self.id)
-            p = stg.best_reply(s,constants._lambda[self.id])
-            for i in range(constants.m):
-                if constants.p[i] - p[i] > constants.eps:
-                    flag = True
-                    constants.p[i] = p[i]
-            if flag is not True:
-                break
+def process_run(q, id):
+    while(True):
+        p = q.get()
+        q.put(p)
+        s = get_available_process(constants.server_list, p, id)
+        pp = stg.best_reply(s,constants._lambda[id], p[id])
+        for i in range(constants.m):
+            if p[id][i] - pp[i] > constants.eps:
+                flag = True
+                p[id][i] = pp[i]
+        x = q.get()
+        x[id] = p[id]
+        q.put(x)
+        if flag is not True:
+            break
 
 

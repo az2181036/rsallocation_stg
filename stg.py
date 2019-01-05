@@ -19,7 +19,7 @@ def get_total_power(server_list):
     for i in range(len(server_list)):
         sum += server_list[i].get_power()
 
-def best_reply(server_list, lambda_j):
+def best_reply(server_list, lambda_j, p):
     server_list.sort(reverse=True)
     k = constants.m - 1
 
@@ -28,15 +28,15 @@ def best_reply(server_list, lambda_j):
     t = (tmp - lambda_j) / _tmp
 
     while t>= math.sqrt(server_list[k].get_available_process()):
-        constants.p[k] = 0
+        p[k] = 0
         k = k - 1
         tmp = get_total_available_process(server_list, False)
         _tmp = get_total_available_process(server_list, True)
         t = (tmp - lambda_j) / _tmp
 
     for j in range(k+1):
-        constants.p[j] = (server_list[j].get_available_process() - t * math.sqrt(server_list[j].get_available_process()))/ lambda_j
-
+        p[j] = (server_list[j].get_available_process() - t * math.sqrt(server_list[j].get_available_process()))/ lambda_j
+    return p
 
 def leader_best_response(server_list):
     gamma = constants._gamma
@@ -58,7 +58,8 @@ def leader_best_response(server_list):
             k += 1
     return M,s
 
-def stackel_berg_game(pro, p, M, s):
+def stackel_berg_game(server_list, qos):
+
     total_lambda_avg = sum(_lambda) / len(_lambda)
     power = sum(p)
     k = power / constants._gamma
